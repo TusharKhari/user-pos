@@ -55,6 +55,7 @@ class _CartScreenState extends State<CartScreen> {
                 return providerValue.isLoading
                     ? const CircularProgressIndicator()
                     : ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                         itemCount: providerValue.cartItems.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -83,6 +84,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                                 const Text("price"),
                                 ListView.builder(
+                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: item.price?.length ?? 0,
                                   itemBuilder: (context, priceIdx) {
@@ -110,7 +112,7 @@ class _CartScreenState extends State<CartScreen> {
                                   },
                                 ),
                                 const Text("extras"),
-                                ListView.builder(
+                                ListView.builder( physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: item.extras?.length ?? 0,
                                   itemBuilder: (context, extraIdx) {

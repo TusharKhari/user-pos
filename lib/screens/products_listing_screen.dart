@@ -68,7 +68,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
           children: [
             Consumer<ProductListingController>(
               builder: (context, providerValue, child) {
-                return ListView.builder(
+                return ListView.builder( physics: const NeverScrollableScrollPhysics(),
                   itemCount: providerValue.productsList.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
@@ -92,7 +92,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                           ],
                         ),
                         Text("price"),
-                        ListView.builder(
+                        ListView.builder( physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: item.price?.length ?? 0,
                           itemBuilder: (context, priceIdx) {
@@ -117,7 +117,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                           },
                         ),
                         const Text("extras"),
-                        ListView.builder(
+                        ListView.builder( physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: item.extras?.length ?? 0,
                           itemBuilder: (context, extraIdx) {
