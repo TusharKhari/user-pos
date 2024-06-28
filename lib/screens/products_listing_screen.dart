@@ -1,13 +1,18 @@
- 
- import 'dart:developer';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:image_network/image_network.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/screens/cart_screen.dart';
+import 'package:order_list_product_create/screens/item_detail.dart';
+import 'package:order_list_product_create/utils/global_variables.dart';
+import 'package:order_list_product_create/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:js' as js;
+
+import 'package:responsive_framework/responsive_framework.dart';
 
 class ProductListingScreen extends StatefulWidget {
   const ProductListingScreen({super.key});
@@ -17,10 +22,9 @@ class ProductListingScreen extends StatefulWidget {
 }
 
 class _ProductListingScreenState extends State<ProductListingScreen> {
-   String? tabNo;
+  String? tabNo;
   @override
   void initState() {
-    // TODO: implement initState
     getProducts();
     super.initState();
   }
@@ -39,134 +43,128 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
     }
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backColor,
       appBar: AppBar(
-        title: Text("Items ${tabNo}"),
-        actions: [
-          Consumer<ProductListingController>(builder: (context, value, child) {
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CartScreen(),
-                ));
-              },
-              child: Badge(
-                  child: Icon(Icons.shopping_cart_sharp),
-                  label: Text("${value.cartItems.length}")),
-            );
-          }),
-          SizedBox(
-            width: 70,
-          ),
-        ],
+        backgroundColor: primaryColor,
+        title: Text(
+          "Menu",
+          style: heading2,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Consumer<ProductListingController>(
               builder: (context, providerValue, child) {
-                return ListView.builder( physics: const NeverScrollableScrollPhysics(),
-                  itemCount: providerValue.productsList.length,
+                return GridView.builder(
+                  padding: const EdgeInsets.all(12),
                   shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  clipBehavior: Clip.none,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      crossAxisCount:
+                          ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                              ? 2
+                              : ResponsiveBreakpoints.of(context)
+                                      .smallerThan(DESKTOP)
+                                  ? 3
+                                  : 4),
+                  itemCount: providerValue.productsList.length,
                   itemBuilder: (context, index) {
                     var item = providerValue.productsList[index];
-                    return Card(
-                        child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            ImageNetwork(
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: boxColor,
+                          border: Border.all(
+                            color: primaryColor,
+                            width: 4,
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Stack(
+                        children: [
+                          Card(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: ImageNetwork(
                               image: item.photos?.first ?? "",
-                              height: 99,
-                              width: 99,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.432,
+                              width: ResponsiveBreakpoints.of(context)
+                                      .smallerThan(TABLET)
+                                  ? MediaQuery.of(context).size.width * 0.45
+                                  : ResponsiveBreakpoints.of(context)
+                                          .smallerThan(DESKTOP)
+                                      ? MediaQuery.of(context).size.width * 0.38
+                                      : MediaQuery.of(context).size.width *
+                                          0.28,
+                              fitAndroidIos: BoxFit.cover,
+                              fitWeb: BoxFitWeb.cover,
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(10)),
                             ),
-                            Column(
-                              children: [
-                                Text(item.name ?? ""),
-                                Text(item.description ?? ""),
-                              ],
-                            )
-                          ],
-                        ),
-                        Text("price"),
-                        ListView.builder( physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: item.price?.length ?? 0,
-                          itemBuilder: (context, priceIdx) {
-                            var price = item.price?[priceIdx];
-                            return Row(
-                              children: [
-                                Checkbox(
-                                  value: price?.isAdded ?? false,
-                                  onChanged: (value) {
-                                    providerValue.selectPrice(
-                                        index: index, priceIdex: priceIdx);
-                                  },
-                                ),
-                                Column(
-                                  children: [
-                                    Text("${price?.name}"),
-                                    Text("${price?.price}"),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        const Text("extras"),
-                        ListView.builder( physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: item.extras?.length ?? 0,
-                          itemBuilder: (context, extraIdx) {
-                            var extra = item.extras?[extraIdx];
-                            return Row(
-                              children: [
-                                Checkbox(
-                                  value: extra?.isAdded ?? false,
-                                  onChanged: (value) {
-                                    providerValue.selectExtra(
-                                        index: index, extraIdx: extraIdx);
-                                  },
-                                ),
-                                Column(
-                                  children: [
-                                    Text("${extra?.name}"),
-                                    Text("${extra?.price}"),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  providerValue.decreaseQuantity(index: index);
-                                },
-                                icon: Icon(Icons.remove)),
-                            item.quantity == 0
-                                ? Text("QTY")
-                                : Text(" ${item.quantity} "),
-                            IconButton(
-                                onPressed: () {
-                                  providerValue.increaseQuantity(index: index);
-                                },
-                                icon: Icon(Icons.add)),
-                            TextButton(
-                                onPressed: () {
-                                  providerValue.addItemInCart(index: index);
-                                },
-                                child: Text(
-                                  "Add item to cart",
-                                ))
-                          ],
-                        )
-                      ],
-                    ));
+                          ),
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(color: primaryColor),
+                              width: double.infinity,
+                              height: 35,
+                              padding: EdgeInsets.only(left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        item.name!.capitalizeFirst ?? "",
+                                        style: heading2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        "Price",
+                                        style: heading2,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                                decoration: BoxDecoration(color: primaryColor),
+                                width: double.infinity,
+                                height: 40,
+                                padding: EdgeInsets.only(left: 10, bottom: 5),
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            ItemDetailScreen(itemIndex: index),
+                                      ));
+                                    },
+                                    child: Text(
+                                      "ADD",
+                                      style: heading2,
+                                    ))),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 );
               },

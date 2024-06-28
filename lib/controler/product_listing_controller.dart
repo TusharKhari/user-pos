@@ -7,6 +7,7 @@ import 'package:order_list_product_create/models/product_model.dart';
 class ProductListingController extends ChangeNotifier {
   List<ProductModel> productsList = [];
   Future<void> getProducts({required int tableNo}) async {
+    productsList = [];
     CollectionReference products =
         FirebaseFirestore.instance.collection('products');
     var pro = await products.get();
