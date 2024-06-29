@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:order_list_product_create/models/product_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductListingController extends ChangeNotifier {
   int pageIndex = 0;
@@ -92,7 +93,6 @@ class ProductListingController extends ChangeNotifier {
     // add to list
     var cItem = cam.copyWith(totalPrice: _calculatePriceOfParticularItem(cam));
     cartItems.add(cItem);
-
     // reset values
     var product = productsList[index];
     var item = product.copyWith(quantity: 0);
@@ -122,7 +122,6 @@ class ProductListingController extends ChangeNotifier {
             double.parse(extra.price ?? "0");
       }
     }
-
     return totalPrice;
   }
 
@@ -130,8 +129,8 @@ class ProductListingController extends ChangeNotifier {
     cartItems[index] = cartItems[index].copyWith(
       quantity: (cartItems[index].quantity ?? 0) + 1,
     );
-    cartItems[index] = cartItems[index]
-        .copyWith(totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
+    cartItems[index] = cartItems[index].copyWith(
+        totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
     calculateTotalBill();
     notifyListeners();
   }
@@ -140,8 +139,8 @@ class ProductListingController extends ChangeNotifier {
     cartItems[index] = cartItems[index].copyWith(
       quantity: (cartItems[index].quantity ?? 0) - 1,
     );
-    cartItems[index] = cartItems[index]
-        .copyWith(totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
+    cartItems[index] = cartItems[index].copyWith(
+        totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
     if (cartItems[index].quantity == 0) {
       cartItems.removeAt(index);
     }
@@ -180,6 +179,7 @@ class ProductListingController extends ChangeNotifier {
       return false;
     }
     try {
+      List<String> orderIds = [];
       isLoading = true;
       notifyListeners();
       for (var ordr in cartItems) {
@@ -191,12 +191,16 @@ class ProductListingController extends ChangeNotifier {
         var data = ordr.toJson();
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         CollectionReference order = firestore.collection('orders');
-        await order
-            .add(data)
-            .then((value) {})
-            .catchError((error) => print("Failed to add user: $error"));
+        await order.add(data).then((DocumentReference value) {
+          orderIds.add(value.id);
+        }).catchError((error) => print("Failed to add user: $error"));
         isLoading = false;
       }
+      var sharedPref = await SharedPreferences.getInstance();
+      var yrL = sharedPref.getStringList("orderIds") ?? [];
+      await sharedPref.setStringList("orderIds", [...orderIds, ...yrL]); 
+      log("logOrderIds $orderIds");
+      orderIds.clear();
       cartItems.clear();
       notifyListeners();
       return true;
@@ -205,5 +209,33 @@ class ProductListingController extends ChangeNotifier {
       notifyListeners();
       print("_addProductToFireDbb $e");
     }
+  }
+
+  // ========================================================
+ List<ProductModel> yourOrderList = [];
+  Future<void> getYourOrders() async {
+    var sharedPrefs = await SharedPreferences.getInstance();
+    var orderIds = sharedPrefs.getStringList("orderIds") ?? ["AoTW6eBibUGsTVHXnVZ3", "navsrqZAcvq8vxaoAn2c"];
+    log("orderIds $orderIds");
+    Stream collectionStream =
+        FirebaseFirestore.instance.collection('orders').snapshots();
+    collectionStream.listen(
+      (event) {
+        var querySnapshots = event as QuerySnapshot<Map<String, dynamic>>;
+       List<QueryDocumentSnapshot> ordersSnapShots = querySnapshots.docs;
+      
+       for (var element in ordersSnapShots) {
+         if(orderIds.any((ele) {
+           return element.id == ele;
+         },)) {
+           var json = element.data() as Map<String, dynamic>;
+          var d = ProductModel.fromJson(json);
+          yourOrderList.add(d);
+         }
+       }
+       notifyListeners();
+          log("your orders ---> $yourOrderList");
+      },
+    );
   }
 }

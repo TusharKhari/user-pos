@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+ 
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:image_network/image_network.dart';
@@ -100,8 +99,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                                       ? MediaQuery.of(context).size.width * 0.38
                                       : MediaQuery.of(context).size.width *
                                           0.28,
-                              fitAndroidIos: BoxFit.cover,
-                              fitWeb: BoxFitWeb.cover,
+                              fitAndroidIos: BoxFit.contain,
+                              fitWeb: BoxFitWeb.contain,
                               borderRadius: const BorderRadius.vertical(
                                   top: Radius.circular(10)),
                             ),
@@ -116,25 +115,23 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                               height: 35,
                               padding: EdgeInsets.only(left: 10),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       Text(
-                                        item.name!.capitalizeFirst ?? "",
+                                        "${item.name!.capitalizeFirst ?? ""}  (${item.category!.capitalizeFirst ?? ""})",
                                         style: heading2,
                                         overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "Price",
-                                        style: heading2,
-                                      )
+                                      ), 
+                                      // Text(
+                                      //   item.category!.capitalizeFirst ?? "",
+                                      //   style: heading2,
+                                      //   overflow: TextOverflow.ellipsis,
+                                      // ), 
                                     ],
-                                  )
+                                  ), 
                                 ],
                               ),
                             ),
