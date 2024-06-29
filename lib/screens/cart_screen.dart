@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_network/image_network.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/utils/global_variables.dart';
 import 'package:provider/provider.dart';
@@ -40,9 +39,10 @@ class _CartScreenState extends State<CartScreen> {
               : Column(
                   children: [
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: providerValue.cartItems.map((item) {
+                      child: ListView.builder(
+                          itemCount: providerValue.cartItems.length,
+                          itemBuilder: (context, index) {
+                            var item = providerValue.cartItems[index];
                             return Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -72,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
                                           height: 5,
                                         ),
                                         Text(
-                                          "Rs. 500",
+                                          "Rs. ${item.totalPrice}",
                                           style: heading2,
                                         ),
                                         if (item.price?.length != null) ...[
@@ -131,14 +131,19 @@ class _CartScreenState extends State<CartScreen> {
                                                       value: extra.isAdded ??
                                                           false,
                                                       onChanged: (value) {
-                                                        providerValue.selectExtra(
-                                                            index: providerValue
-                                                                .cartItems
-                                                                .indexOf(item),
-                                                            extraIdx: item
-                                                                .extras!
-                                                                .indexOf(
-                                                                    extra));
+                                                        providerValue
+                                                            .selectExtra(
+                                                                index: providerValue
+                                                                    .cartItems
+                                                                    .indexOf(
+                                                                        item),
+                                                                extraIdx: item
+                                                                    .extras!
+                                                                    .indexOf(
+                                                                  extra,
+                                                                ),
+                                                                val: value ??
+                                                                    false);
                                                       },
                                                     ),
                                                     Column(
@@ -167,7 +172,11 @@ class _CartScreenState extends State<CartScreen> {
                                     child: Row(
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            providerValue
+                                                .decreaseQuantityInCart(
+                                                    index: index);
+                                          },
                                           icon: Icon(
                                             Icons.remove,
                                             color: Colors.white,
@@ -184,7 +193,11 @@ class _CartScreenState extends State<CartScreen> {
                                           },
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            providerValue
+                                                .increaseQuantityInCart(
+                                                    index: index);
+                                          },
                                           icon: Icon(
                                             Icons.add,
                                             color: Colors.white,
@@ -196,9 +209,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ],
                               ),
                             );
-                          }).toList(),
-                        ),
-                      ),
+                          }),
                     ),
                     if (providerValue.cartItems.isNotEmpty)
                       Container(
@@ -224,7 +235,9 @@ class _CartScreenState extends State<CartScreen> {
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  providerValue.changePageIndex(idx: 0);
+                                },
                                 style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all(borderColor),
@@ -254,9 +267,11 @@ class _CartScreenState extends State<CartScreen> {
                                       content:
                                           Text("Your order has been placed."),
                                     );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    Navigator.pop(context);
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                     providerValue.changePageIndex(idx: 0);
+                                    }
                                   }
                                   if (res == false) {
                                     const snackBar = SnackBar(

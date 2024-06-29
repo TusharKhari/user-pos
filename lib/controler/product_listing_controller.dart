@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:order_list_product_create/models/product_model.dart';
 
 class ProductListingController extends ChangeNotifier {
+  int pageIndex = 0;
+  void changePageIndex({required int idx}) {
+    pageIndex = idx;
+    notifyListeners();
+  }
+
   List<ProductModel> productsList = [];
   Future<void> getProducts({required int tableNo}) async {
-    productsList = [];
+    productsList.clear();
     CollectionReference products =
         FirebaseFirestore.instance.collection('products');
     var pro = await products.get();
@@ -33,10 +39,11 @@ class ProductListingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectExtra({required int index, required int extraIdx}) {
+  void selectExtra(
+      {required int index, required int extraIdx, required bool val}) {
     for (int i = 0; i < (productsList[index].extras?.length ?? 0); i++) {
       if (i == extraIdx) {
-        var extras = productsList[index].extras?[i].copyWith(isAdded: true);
+        var extras = productsList[index].extras?[i].copyWith(isAdded: val);
         productsList[index].extras?[i] = extras!;
       }
     }
@@ -48,7 +55,6 @@ class ProductListingController extends ChangeNotifier {
     var quantity = product.quantity ?? 0;
     var item = product.copyWith(quantity: ++quantity);
     productsList[index] = item;
-    log("message ${item.quantity}");
     notifyListeners();
   }
 
@@ -67,7 +73,25 @@ class ProductListingController extends ChangeNotifier {
     var cp = productsList[index];
     cp = cp.copyWith(status: 1);
     ProductModel cam = ProductModel.fromJson(cp.toJson());
-    cartItems.add(cam);
+    // is all size false
+
+    bool isAllSizeFalse = true;
+    for (NamePriceIsAdded p in cam.price ?? []) {
+      if (p.isAdded == true) {
+        isAllSizeFalse = false;
+        break;
+      }
+    }
+    if (isAllSizeFalse) {
+      throw "Size not selected.";
+    }
+    //
+    if (cam.quantity == 0) {
+      throw "Please increase quantity.";
+    }
+    // add to list
+    var cItem = cam.copyWith(totalPrice: _calculatePriceOfParticularItem(cam));
+    cartItems.add(cItem);
 
     // reset values
     var product = productsList[index];
@@ -81,6 +105,47 @@ class ProductListingController extends ChangeNotifier {
       var price = productsList[index].price?[i].copyWith(isAdded: false);
       productsList[index].price?[i] = price!;
     }
+    notifyListeners();
+  }
+
+  double _calculatePriceOfParticularItem(ProductModel item) {
+    double totalPrice = 0;
+    for (NamePriceIsAdded price in item.price ?? []) {
+      if (price.isAdded == true) {
+        totalPrice += double.parse("${item.quantity ?? "0"}") *
+            double.parse(price.price ?? "0");
+      }
+    }
+    for (NamePriceIsAdded extra in item.extras ?? []) {
+      if (extra.isAdded == true) {
+        totalPrice += double.parse("${item.quantity ?? "0"}") *
+            double.parse(extra.price ?? "0");
+      }
+    }
+
+    return totalPrice;
+  }
+
+  void increaseQuantityInCart({required int index}) {
+    cartItems[index] = cartItems[index].copyWith(
+      quantity: (cartItems[index].quantity ?? 0) + 1,
+    );
+    cartItems[index] = cartItems[index]
+        .copyWith(totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
+    calculateTotalBill();
+    notifyListeners();
+  }
+
+  void decreaseQuantityInCart({required int index}) {
+    cartItems[index] = cartItems[index].copyWith(
+      quantity: (cartItems[index].quantity ?? 0) - 1,
+    );
+    cartItems[index] = cartItems[index]
+        .copyWith(totalPrice: _calculatePriceOfParticularItem(cartItems[index]));
+    if (cartItems[index].quantity == 0) {
+      cartItems.removeAt(index);
+    }
+    calculateTotalBill();
     notifyListeners();
   }
 
@@ -128,7 +193,7 @@ class ProductListingController extends ChangeNotifier {
         CollectionReference order = firestore.collection('orders');
         await order
             .add(data)
-            .then((value) => print("order placed"))
+            .then((value) {})
             .catchError((error) => print("Failed to add user: $error"));
         isLoading = false;
       }

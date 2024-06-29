@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/utils/global_variables.dart';
@@ -18,9 +20,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var item =
-        context.read<ProductListingController>().productsList[widget.itemIndex];
-
+    var item = context
+        .watch<ProductListingController>()
+        .productsList[widget.itemIndex];
     return Scaffold(
       backgroundColor: backColor,
       appBar: AppBar(
@@ -81,11 +83,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           value: index,
                           groupValue: selectedPriceIndex,
                           onChanged: (int? value) {
-                            setState(() {
+                             setState(() {
                               selectedPriceIndex = value;
                             });
                             providerValue.selectPrice(
-                                index: index, priceIdex: index);
+                                index: widget.itemIndex, priceIdex: index);
                           },
                         ),
                       );
@@ -104,39 +106,40 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       color: borderColor,
                       border: Border.all(color: boxColor)),
                   child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: item.extras?.length ?? 0,
                     itemBuilder: (context, index) {
+                      var extra = item.extras?[index];
                       return Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                             border:
                                 Border(bottom: BorderSide(color: boxColor))),
                         child: CheckboxListTile(
-                          fillColor: MaterialStateProperty.resolveWith(
+                          fillColor: WidgetStateProperty.resolveWith(
                             (states) {
-                              if (states.contains(MaterialState.selected)) {
+                              if (states.contains(WidgetState.selected)) {
                                 return primaryColor;
                               }
                               return boxColor;
                             },
                           ),
                           title: Text(
-                            "${item.extras?[index].name} - ${item.extras?[index].price}",
+                            "${extra?.name} - ${extra?.price}",
                             style: des2,
                           ),
-                          value: selectedExtrasIndexes.contains(index),
+                          value: extra?.isAdded,
                           onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true) {
-                                selectedExtrasIndexes.add(index);
-                              } else {
-                                selectedExtrasIndexes.remove(index);
-                              }
+                            // setState(() {
+                            //   if (value == true) {
+                            //     selectedExtrasIndexes.add(index);
+                            //   } else {
+                            //     selectedExtrasIndexes.remove(index);
+                            //   }
                               providerValue.selectExtra(
-                                  index: index, extraIdx: index);
-                            });
+                                  index: widget.itemIndex, extraIdx: index, val: !(extra?.isAdded??false));
+                            // });
                           },
                         ),
                       );
@@ -185,16 +188,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  if (item.quantity == 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text('SELECT THE QUANTITY BEFORE ADDING TO CART'),
-                    ));
-                  } else {
+                  
+                  //
+                  try {
                     context
                         .read<ProductListingController>()
                         .addItemInCart(index: widget.itemIndex);
                     Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text('$e'),
+                    ));
                   }
                 },
                 child: Text("Add to Cart", style: button)),

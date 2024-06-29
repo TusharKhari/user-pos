@@ -50,50 +50,56 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
     ProductListingScreen(),
     CartScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backColor,
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: primaryColor,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.menu,
-            ),
-            label: 'Menu',
+    return  Consumer<ProductListingController>(
+        builder: (context, providerValue, child) {
+        return Scaffold(
+          backgroundColor: backColor,
+          body: Center(
+            child: _widgetOptions.elementAt(providerValue.pageIndex),
           ),
-          BottomNavigationBarItem(
-            icon: Consumer<ProductListingController>(
-                builder: (context, value, child) {
-              return Badge(
-                  child: Icon(Icons.shopping_cart_sharp),
-                  label: Text("${value.cartItems.length}"));
-            }),
-            label: 'Cart',
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: primaryColor,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.menu,
+                ),
+                label: 'Menu',
+              ),
+              BottomNavigationBarItem(
+                icon: Consumer<ProductListingController>(
+                    builder: (context, value, child) {
+                  return Badge(
+                      child: Icon(Icons.shopping_cart_sharp),
+                      label: Text("${value.cartItems.length}"));
+                }),
+                label: 'Cart',
+              ),
+            ],
+            currentIndex: providerValue.pageIndex,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: backColor,
+            onTap: (value) {
+              providerValue.changePageIndex(idx: value);
+            },
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: backColor,
-        onTap: _onItemTapped,
-      ),
+        );
+      }
     );
   }
 }
