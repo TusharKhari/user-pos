@@ -16,7 +16,7 @@ class ProductListingController extends ChangeNotifier {
     productsList.clear();
     CollectionReference products =
         FirebaseFirestore.instance.collection('products');
-    var pro = await products.get();
+    var pro = await products.orderBy("category").get();
     for (var element in pro.docs) {
       var data = element.data() as Map<String, dynamic>;
       var pro = ProductModel.fromJson(data);
