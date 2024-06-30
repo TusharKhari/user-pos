@@ -4,7 +4,7 @@ import 'package:order_list_product_create/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({Key? key}) : super(key: key);
+  const CartScreen({super.key});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
       body: Consumer<ProductListingController>(
         builder: (context, providerValue, child) {
           return providerValue.isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : Column(
                   children: [
                     Expanded(
@@ -44,7 +44,7 @@ class _CartScreenState extends State<CartScreen> {
                           itemBuilder: (context, index) {
                             var item = providerValue.cartItems[index];
                             return Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
                                 vertical: 8,
                               ),
@@ -68,7 +68,7 @@ class _CartScreenState extends State<CartScreen> {
                                           item.name ?? "",
                                           style: heading2,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Text(
@@ -76,12 +76,12 @@ class _CartScreenState extends State<CartScreen> {
                                           style: heading2,
                                         ),
                                         if (item.price?.length != null) ...[
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 10),
                                           Text(
                                             "SIZE",
                                             style: des2,
                                           ),
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -113,12 +113,12 @@ class _CartScreenState extends State<CartScreen> {
                                           ),
                                         ],
                                         if (item.extras != null) ...[
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 10),
                                           Text(
                                             "EXTRAS",
                                             style: des2,
                                           ),
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(4),
                                     color: primaryColor,
                                     child: Row(
                                       children: [
@@ -177,7 +177,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 .decreaseQuantityInCart(
                                                     index: index);
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.remove,
                                             color: Colors.white,
                                           ),
@@ -198,7 +198,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 .increaseQuantityInCart(
                                                     index: index);
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.add,
                                             color: Colors.white,
                                           ),
@@ -214,7 +214,7 @@ class _CartScreenState extends State<CartScreen> {
                     if (providerValue.cartItems.isNotEmpty)
                       Container(
                         color: borderColor,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
                             Row(
@@ -230,8 +230,8 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
-                            Container(
+                            const SizedBox(height: 10),
+                            SizedBox(
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
@@ -240,12 +240,12 @@ class _CartScreenState extends State<CartScreen> {
                                 },
                                 style: ButtonStyle(
                                   backgroundColor:
-                                      MaterialStateProperty.all(borderColor),
-                                  shape: MaterialStateProperty.all<
+                                      WidgetStateProperty.all(borderColor),
+                                  shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
-                                      side: BorderSide(color: Colors.white),
+                                      side: const BorderSide(color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -255,8 +255,8 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Container(
+                            const SizedBox(height: 10),
+                            SizedBox(
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
@@ -284,8 +284,8 @@ class _CartScreenState extends State<CartScreen> {
                                 },
                                 style: ButtonStyle(
                                   backgroundColor:
-                                      MaterialStateProperty.all(primaryColor),
-                                  shape: MaterialStateProperty.all<
+                                      WidgetStateProperty.all(primaryColor),
+                                  shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),

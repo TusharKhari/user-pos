@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
@@ -8,7 +7,7 @@ import 'package:provider/provider.dart';
 class ItemDetailScreen extends StatefulWidget {
   final int itemIndex;
 
-  const ItemDetailScreen({Key? key, required this.itemIndex}) : super(key: key);
+  const ItemDetailScreen({super.key, required this.itemIndex});
 
   @override
   _ItemDetailScreenState createState() => _ItemDetailScreenState();
@@ -29,7 +28,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         backgroundColor: primaryColor,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           color: Colors.white,
         ),
         title: Text(
@@ -46,18 +45,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(item.name ?? "", style: heading3),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(item.description ?? "", style: des2),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text("SIZES", style: heading2),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: borderColor,
                       border: Border.all(color: boxColor)),
                   child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: item.price?.length ?? 0,
                     itemBuilder: (context, index) {
@@ -68,9 +67,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 Border(bottom: BorderSide(color: boxColor))),
                         child: RadioListTile(
                           controlAffinity: ListTileControlAffinity.trailing,
-                          fillColor: MaterialStateProperty.resolveWith(
+                          fillColor: WidgetStateProperty.resolveWith(
                             (states) {
-                              if (states.contains(MaterialState.selected)) {
+                              if (states.contains(WidgetState.selected)) {
                                 return primaryColor;
                               }
                               return boxColor;
@@ -94,12 +93,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   "Extras",
                   style: heading2,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -146,7 +145,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             );
           }),
@@ -154,7 +153,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       ),
       bottomNavigationBar: Container(
         color: primaryColor,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -166,7 +165,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         .read<ProductListingController>()
                         .decreaseQuantity(index: widget.itemIndex);
                   },
-                  icon: Icon(Icons.remove, color: Colors.white),
+                  icon: const Icon(Icons.remove, color: Colors.white),
                 ),
                 Consumer<ProductListingController>(
                   builder: (context, providerValue, child) {
@@ -182,7 +181,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         .read<ProductListingController>()
                         .increaseQuantity(index: widget.itemIndex);
                   },
-                  icon: Icon(Icons.add, color: Colors.white),
+                  icon: const Icon(Icons.add, color: Colors.white),
                 ),
               ],
             ),

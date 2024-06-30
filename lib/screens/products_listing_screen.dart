@@ -53,15 +53,15 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
           IconButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => YourOrdersScreen(),
+                  builder: (context) => const YourOrdersScreen(),
                 ));
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.food_bank_outlined,
                 size: 40,
                 color: Colors.white,
               )),
-          SizedBox(
+          const SizedBox(
             width: 50,
           ),
         ],
@@ -129,7 +129,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                               decoration: BoxDecoration(color: primaryColor),
                               width: double.infinity,
                               height: 35,
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               child: Column(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -159,7 +159,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                                 decoration: BoxDecoration(color: primaryColor),
                                 width: double.infinity,
                                 height: 40,
-                                padding: EdgeInsets.only(left: 10, bottom: 5),
+                                padding: const EdgeInsets.only(left: 10, bottom: 5),
                                 child: TextButton(
                                     onPressed: () {
                                       Navigator.of(context)

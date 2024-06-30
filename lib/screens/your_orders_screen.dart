@@ -52,7 +52,7 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
               builder: (context, providerVal, child) {
                 return Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 7,
                     ),
                    Visibility(
@@ -63,15 +63,15 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                         Container(
                           width: 300,
                           color: borderColor,
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.av_timer_sharp,
                                 color: Colors.white,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(
@@ -85,15 +85,15 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                         Container(
                           width: 300,
                           color: borderColor,
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.av_timer_sharp,
                                 color: Colors.white,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(
@@ -107,15 +107,15 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                         Container(
                           width: 300,
                           color: borderColor,
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.av_timer_sharp,
                                 color: Colors.white,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(
@@ -155,7 +155,7 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                                                 .smallerThan(TABLET)
                                             ? 120
                                             : 150),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Expanded(
@@ -181,7 +181,7 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 5,
                                           ),
                                           Text(

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/screens/products_listing_screen.dart';
 import 'package:order_list_product_create/screens/cart_screen.dart';
-import 'package:order_list_product_create/screens/your_orders_screen.dart';
-import 'package:order_list_product_create/utils/global_variables.dart';
+ import 'package:order_list_product_create/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -77,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: primaryColor,
             items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(
                   Icons.menu,
                 ),
@@ -87,8 +86,8 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Consumer<ProductListingController>(
                     builder: (context, value, child) {
                   return Badge(
-                      child: Icon(Icons.shopping_cart_sharp),
-                      label: Text("${value.cartItems.length}"));
+                      label: Text("${value.cartItems.length}"),
+                      child: const Icon(Icons.shopping_cart_sharp));
                 }),
                 label: 'Cart',
               ),

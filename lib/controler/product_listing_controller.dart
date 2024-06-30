@@ -212,6 +212,7 @@ class ProductListingController extends ChangeNotifier {
       notifyListeners();
       print("_addProductToFireDbb $e");
     }
+    return null;
   }
 
   // ========================================================
@@ -261,8 +262,7 @@ class ProductListingController extends ChangeNotifier {
 
           isAllPrepared = true;
         }
-
-        log("isAnyPreparingg ---> $isAnyPreparing  || isAllPrepared ---> $isAllPrepared");
+        // log("isAnyPreparingg ---> $isAnyPreparing  || isAllPrepared ---> $isAllPrepared");
         notifyListeners();
       },
     );
