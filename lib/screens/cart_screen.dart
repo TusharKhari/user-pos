@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_network/image_network.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/utils/global_variables.dart';
 import 'package:provider/provider.dart';
@@ -159,15 +158,15 @@ class _CartScreenState extends State<CartScreen> {
                                                               extra.isAdded ??
                                                                   false,
                                                           onChanged: (value) {
-                                                            providerValue.selectExtra(
-                                                                index: providerValue
-                                                                    .cartItems
-                                                                    .indexOf(
-                                                                        item),
-                                                                extraIdx: item
-                                                                    .extras!
-                                                                    .indexOf(
-                                                                        extra));
+                                                            // providerValue.selectExtra(
+                                                            //     index: providerValue
+                                                            //         .cartItems
+                                                            //         .indexOf(
+                                                            //             item),
+                                                            //     extraIdx: item
+                                                            //         .extras!
+                                                            //         .indexOf(
+                                                            //             extra));
                                                           },
                                                         ),
                                                         Column(

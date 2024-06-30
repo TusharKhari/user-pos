@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:image_network/image_network.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
-import 'package:order_list_product_create/screens/cart_screen.dart';
 import 'package:order_list_product_create/screens/item_detail.dart';
+import 'package:order_list_product_create/screens/your_orders_screen.dart';
 import 'package:order_list_product_create/utils/global_variables.dart';
-import 'package:order_list_product_create/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:js' as js;
@@ -31,7 +28,6 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
 
   void getProducts() {
     String url = js.context['location']['href'].toString();
-    log("url ---> $url");
     if (url.contains("=")) {
       String tableNo = url.toString().split("=")[1];
       tabNo = tableNo;
@@ -50,9 +46,25 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: Text(
-          "Menu",
+          "Menu (${tabNo ?? 0})",
           style: heading2,
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => YourOrdersScreen(),
+                ));
+              },
+              icon: Icon(
+                Icons.food_bank_outlined,
+                size: 40,
+                color: Colors.white,
+              )),
+          SizedBox(
+            width: 50,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -103,8 +115,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                                       ? MediaQuery.of(context).size.width * 0.38
                                       : MediaQuery.of(context).size.width *
                                           0.28,
-                              fitAndroidIos: BoxFit.cover,
-                              fitWeb: BoxFitWeb.cover,
+                              fitAndroidIos: BoxFit.contain,
+                              fitWeb: BoxFitWeb.contain,
                               borderRadius: const BorderRadius.vertical(
                                   top: Radius.circular(10)),
                             ),
@@ -119,25 +131,24 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                               height: 35,
                               padding: EdgeInsets.only(left: 10),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       Text(
-                                        item.name!.capitalizeFirst ?? "",
+                                        "${item.name!.capitalizeFirst ?? ""}  (${item.category!.capitalizeFirst ?? ""})",
                                         style: heading2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "Price",
-                                        style: heading2,
-                                      )
+                                      // Text(
+                                      //   item.category!.capitalizeFirst ?? "",
+                                      //   style: heading2,
+                                      //   overflow: TextOverflow.ellipsis,
+                                      // ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

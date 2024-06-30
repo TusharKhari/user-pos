@@ -14,5 +14,3 @@ Future<void> initFb() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
-
-
