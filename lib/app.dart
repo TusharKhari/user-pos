@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const YourOrdersScreen(),
-        // home: const MainScreen(),
+        // home: const YourOrdersScreen(),
+        home: const MainScreen(),
       ),
     );
   }

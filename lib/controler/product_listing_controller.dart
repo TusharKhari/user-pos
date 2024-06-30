@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:order_list_product_create/models/product_model.dart';
@@ -189,6 +188,10 @@ class ProductListingController extends ChangeNotifier {
           return false;
         }
         var data = ordr.toJson();
+        var creAt = <String, dynamic>{
+          "createdAt": DateTime.now().millisecondsSinceEpoch
+        };
+        data.addEntries(creAt.entries);
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         CollectionReference order = firestore.collection('orders');
         await order.add(data).then((DocumentReference value) {
@@ -198,7 +201,7 @@ class ProductListingController extends ChangeNotifier {
       }
       var sharedPref = await SharedPreferences.getInstance();
       var yrL = sharedPref.getStringList("orderIds") ?? [];
-      await sharedPref.setStringList("orderIds", [...orderIds, ...yrL]); 
+      await sharedPref.setStringList("orderIds", [...orderIds, ...yrL]);
       log("logOrderIds $orderIds");
       orderIds.clear();
       cartItems.clear();
@@ -212,29 +215,32 @@ class ProductListingController extends ChangeNotifier {
   }
 
   // ========================================================
- List<ProductModel> yourOrderList = [];
+  List<ProductModel> yourOrderList = [];
   Future<void> getYourOrders() async {
+    yourOrderList.clear();
     var sharedPrefs = await SharedPreferences.getInstance();
-    var orderIds = sharedPrefs.getStringList("orderIds") ?? ["AoTW6eBibUGsTVHXnVZ3", "navsrqZAcvq8vxaoAn2c"];
+    var orderIds = sharedPrefs.getStringList("orderIds") ??
+        ["AoTW6eBibUGsTVHXnVZ3", "navsrqZAcvq8vxaoAn2c"];
     log("orderIds $orderIds");
     Stream collectionStream =
         FirebaseFirestore.instance.collection('orders').snapshots();
     collectionStream.listen(
       (event) {
         var querySnapshots = event as QuerySnapshot<Map<String, dynamic>>;
-       List<QueryDocumentSnapshot> ordersSnapShots = querySnapshots.docs;
-      
-       for (var element in ordersSnapShots) {
-         if(orderIds.any((ele) {
-           return element.id == ele;
-         },)) {
-           var json = element.data() as Map<String, dynamic>;
-          var d = ProductModel.fromJson(json);
-          yourOrderList.add(d);
-         }
-       }
-       notifyListeners();
-          log("your orders ---> $yourOrderList");
+        List<QueryDocumentSnapshot> ordersSnapShots = querySnapshots.docs;
+
+        for (var element in ordersSnapShots) {
+          if (orderIds.any(
+            (ele) {
+              return element.id == ele;
+            },
+          )) {
+            var json = element.data() as Map<String, dynamic>;
+            var d = ProductModel.fromJson(json);
+            yourOrderList.add(d);
+          }
+        }
+        notifyListeners();
       },
     );
   }

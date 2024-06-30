@@ -1,9 +1,9 @@
- 
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:image_network/image_network.dart';
 import 'package:order_list_product_create/controler/product_listing_controller.dart';
 import 'package:order_list_product_create/screens/item_detail.dart';
+import 'package:order_list_product_create/screens/your_orders_screen.dart';
 import 'package:order_list_product_create/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +49,22 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
           "Menu (${tabNo ?? 0})",
           style: heading2,
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => YourOrdersScreen(),
+                ));
+              },
+              icon: Icon(
+                Icons.food_bank_outlined,
+                size: 40,
+                color: Colors.white,
+              )),
+          SizedBox(
+            width: 50,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -116,7 +132,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                               padding: EdgeInsets.only(left: 10),
                               child: Column(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
@@ -124,14 +141,14 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                                         "${item.name!.capitalizeFirst ?? ""}  (${item.category!.capitalizeFirst ?? ""})",
                                         style: heading2,
                                         overflow: TextOverflow.ellipsis,
-                                      ), 
+                                      ),
                                       // Text(
                                       //   item.category!.capitalizeFirst ?? "",
                                       //   style: heading2,
                                       //   overflow: TextOverflow.ellipsis,
-                                      // ), 
+                                      // ),
                                     ],
-                                  ), 
+                                  ),
                                 ],
                               ),
                             ),

@@ -24,6 +24,7 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Your orders"),),
       body: SingleChildScrollView(
         child: Column(
           children: [
