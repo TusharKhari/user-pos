@@ -55,73 +55,78 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
                     SizedBox(
                       height: 7,
                     ),
-                    if (providerVal.isAnyPreparing == false &&
-                        providerVal.isAllPrepared == false)
-                      Container(
-                        width: 300,
-                        color: borderColor,
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.av_timer_sharp,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Your Order is placed",
-                              style: heading2,
-                            ),
-                          ],
+                   Visibility(
+                    visible: providerVal.yourOrderList.isNotEmpty,
+                     child: Column(
+                      children: [ if (providerVal.isAnyPreparing == false &&
+                          providerVal.isAllPrepared == false)
+                        Container(
+                          width: 300,
+                          color: borderColor,
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.av_timer_sharp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Your Order is placed",
+                                style: heading2,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    if (providerVal.isAnyPreparing)
-                      Container(
-                        width: 300,
-                        color: borderColor,
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.av_timer_sharp,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Your Order is being prepared",
-                              style: heading2,
-                            ),
-                          ],
+                      if (providerVal.isAnyPreparing)
+                        Container(
+                          width: 300,
+                          color: borderColor,
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.av_timer_sharp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Your Order is being prepared",
+                                style: heading2,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    if (providerVal.isAllPrepared)
-                      Container(
-                        width: 300,
-                        color: borderColor,
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.av_timer_sharp,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Your Order is prepared",
-                              style: heading2,
-                            ),
-                          ],
-                        ),
-                      ),
+                      if (providerVal.isAllPrepared)
+                        Container(
+                          width: 300,
+                          color: borderColor,
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.av_timer_sharp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Your Order is prepared",
+                                style: heading2,
+                              ),
+                            ],
+                          ),
+                        ),],
+                     ),
+                   ), 
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const AlwaysScrollableScrollPhysics(),
