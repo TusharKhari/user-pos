@@ -216,7 +216,11 @@ class ProductListingController extends ChangeNotifier {
 
   // ========================================================
   List<ProductModel> yourOrderList = [];
+  bool isAnyPreparing = false;
+  bool isAllPrepared = false;
   Future<void> getYourOrders() async {
+    isAnyPreparing = false;
+    isAllPrepared = false;
     yourOrderList.clear();
     var sharedPrefs = await SharedPreferences.getInstance();
     var orderIds = sharedPrefs.getStringList("orderIds") ??
@@ -228,7 +232,7 @@ class ProductListingController extends ChangeNotifier {
       (event) {
         var querySnapshots = event as QuerySnapshot<Map<String, dynamic>>;
         List<QueryDocumentSnapshot> ordersSnapShots = querySnapshots.docs;
-
+        yourOrderList.clear();
         for (var element in ordersSnapShots) {
           if (orderIds.any(
             (ele) {
@@ -237,9 +241,28 @@ class ProductListingController extends ChangeNotifier {
           )) {
             var json = element.data() as Map<String, dynamic>;
             var d = ProductModel.fromJson(json);
+            // log("message $json");
             yourOrderList.add(d);
           }
         }
+
+        int check = 0;
+        for (var ordr in yourOrderList) {
+          check += ordr.status ?? 0;
+
+          if (ordr.status == 2) {
+            isAnyPreparing = true;
+            break;
+          }
+        }
+
+        if (check == (yourOrderList.length * 3)) {
+          isAnyPreparing = false;
+
+          isAllPrepared = true;
+        }
+
+        log("isAnyPreparingg ---> $isAnyPreparing  || isAllPrepared ---> $isAllPrepared");
         notifyListeners();
       },
     );

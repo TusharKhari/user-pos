@@ -169,16 +169,9 @@ class _CartScreenState extends State<CartScreen> {
                                                             //             extra));
                                                           },
                                                         ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              "${extra.name} (${extra.price})",
-                                                              style: des2,
-                                                            ),
-                                                          ],
+                                                        Text(
+                                                          "${extra.name} (${extra.price})",
+                                                          style: des2,
                                                         ),
                                                       ],
                                                     ),
@@ -288,7 +281,6 @@ class _CartScreenState extends State<CartScreen> {
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
-                                        Navigator.pop(context);
                                       }
                                       if (res == false) {
                                         const snackBar = SnackBar(
